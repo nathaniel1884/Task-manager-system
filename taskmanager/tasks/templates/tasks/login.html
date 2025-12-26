@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Task Manager</title>
+    <!-- Font Awesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('{% static "images/b2.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dark overlay for better readability on background image */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        /* Floating animation elements */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            bottom: -200px;
+            left: -200px;
+            animation: float 20s infinite;
+            animation-delay: 5s;
+            z-index: 0;
+        }
+
+        .float-element {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite;
+            z-index: 0;
+        }
+
+        .float-element:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -250px;
+            right: -250px;
+        }
+
+        .float-element:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: -150px;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(180deg); }
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            min-height: auto;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+            color: white;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            top: -100px;
+            right: -100px;
+        }
+
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .brand h1 {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            animation: fadeInLeft 1s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand h1 i {
+            font-size: 1.8em;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            animation: fadeInLeft 1.2s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            animation: fadeInLeft 1.4s ease;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.3em;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .feature-item:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .feature-text h3 {
+            font-size: 1em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .feature-text p {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: white;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            color: #999;
+            font-size: 0.95em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+
+        .tab.active {
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-content {
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1em;
+            color: #999;
+            z-index: 1;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #999;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .toggle-password:hover {
+            color: #667eea;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px 12px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control.is-invalid {
+            border-color: #ff4757;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ff4757'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ff4757' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .form-control.is-invalid:focus {
+            border-color: #ff4757;
+            box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.25);
+        }
+
+        input:focus,
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .messages { margin-bottom: 20px; }
+        .alert { padding: 15px 20px; border-radius: 12px; margin-bottom: 15px; animation: slideInDown 0.5s ease; font-size: 0.95em; font-weight: 500; }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .alert-error { background: #fee; color: #c33; border: 2px solid #fcc; }
+        .alert-success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .errorlist { list-style: none; padding: 10px 15px; background: #fee; color: #c33; border-radius: 8px; margin-top: 8px; font-size: 0.9em; }
+        .errorlist li { margin: 5px 0; }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; max-width: 500px; }
+            .left-panel, .right-panel { padding: 30px 20px; }
+            .brand h1 { font-size: 1.8em; }
+            .form-header h2 { font-size: 1.6em; }
+            .float-element { display: none; } /* Hide floating elements on mobile */
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="float-element"></div>
+    <div class="float-element"></div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="brand">
+                <h1 style="color: rgb(224, 248, 5);"><i class="fas fa-tasks"></i> Task Manager Pro</h1>
+                <p>Work smarter, together. Track tasks intelligently, collaborate seamlessly, and achieve more with our powerful task manager.</p>
+            </div>
+            <div class="features">
+                
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="feature-text">
+                        <h3>Track Progress</h3>
+                        <p>See your productivity grow, visually</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="feature-text">
+                        <h3>Secure & Private</h3>
+                        <p>Your data stays protected, always</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-header">
+                <h2 id="form-title">Welcome Back!</h2>
+                <p id="form-subtitle">Login to access your tasks</p>
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Login</div>
+                <div class="tab" onclick="switchTab('register')">Register</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="form-content active">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {% if login_form %}
+                    <div class="input-group">
+                        <label>Username</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-user"></i></span>
+                            {{ login_form.username }}
+                        </div>
+                        {% if login_form.username.errors %}
+                        <div class="errorlist">
+                            {{ login_form.username.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
+                            {{ login_form.password }}
+                            <span class="toggle-password" onclick="togglePassword('id_password', this)"><i class="fas fa-eye"></i></span>
+                        </div>
+                        {% if login_form.password.errors %}
+                        <div class="errorlist">
+                            {{ login_form.password.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="input-group">
+                        <label>Username</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-user"></i></span>
+                            <input type="text" name="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" placeholder="Enter your password" required id="login-password">
+                            <span class="toggle-password" onclick="togglePassword('login-password', this)"><i class="fas fa-eye"></i></span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Login to Dashboard</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="form-content">
+                <form method="POST" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    
+                    {% if register_form %}
+                        <div class="input-group">
+                            <label>Username</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-user"></i></span>
+                                {{ register_form.username }}
+                            </div>
+                            {% if register_form.username.errors %}
+                            <div class="errorlist">
+                                {{ register_form.username.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                {{ register_form.email }}
+                            </div>
+                            {% if register_form.email.errors %}
+                            <div class="errorlist">
+                                {{ register_form.email.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                {{ register_form.password1 }}
+                                <span class="toggle-password" onclick="togglePassword('id_password1', this)"><i class="fas fa-eye"></i></span>
+                            </div>
+                            {% if register_form.password1.errors %}
+                            <div class="errorlist">
+                                {{ register_form.password1.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="input-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                {{ register_form.password2 }}
+                                <span class="toggle-password" onclick="togglePassword('id_password2', this)"><i class="fas fa-eye"></i></span>
+                            </div>
+                            {% if register_form.password2.errors %}
+                            <div class="errorlist">
+                                {{ register_form.password2.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Fallback to original form if register_form not available -->
+                        <div class="input-group">
+                            <label>Username</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-user"></i></span>
+                                <input type="text" name="username" placeholder="Choose a username" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password1" placeholder="Create a strong password" required id="register-password">
+                                <span class="toggle-password" onclick="togglePassword('register-password', this)"><i class="fas fa-eye"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password2" placeholder="Confirm your password" required id="confirm-password">
+                                <span class="toggle-password" onclick="togglePassword('confirm-password', this)"><i class="fas fa-eye"></i></span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.getElementById('login-form').classList.add('active');
+                document.getElementById('form-title').textContent = 'Welcome Back!';
+                document.getElementById('form-subtitle').textContent = 'Login to access your tasks';
+            } else {
+                document.getElementById('register-form').classList.add('active');
+                document.getElementById('form-title').textContent = 'Create Account';
+                document.getElementById('form-subtitle').textContent = 'Join us and start organizing';
+            }
+        }
+
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = icon.querySelector('i');
+            
+            if (input.type === "password") {
+                input.type = "text";
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Add this function
+        function initializeForms() {
+            // Check if there are form errors and switch to appropriate tab
+            const registerErrors = document.querySelectorAll('#register-form .errorlist').length;
+            const loginErrors = document.querySelectorAll('#login-form .errorlist').length;
+            
+            // If we're on register page with errors, switch to register tab
+            if (window.location.pathname === '/register/' || registerErrors > 0) {
+                // Trigger click on register tab
+                document.querySelector('.tab:nth-child(2)').click();
+            }
+        }
+
+        // Call this on page load
+        document.addEventListener('DOMContentLoaded', initializeForms);
+    </script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task - Task Manager Pro</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('{% static "images/b3.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dark overlay with gradient for better readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+            z-index: -1;
+        }
+
+        /* Floating animation elements */
+        .float-element {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 20s infinite;
+            z-index: 0;
+        }
+
+        .float-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .float-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            left: 10%;
+            animation-delay: 5s;
+        }
+
+        .float-element:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 20%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            top: -30px;
+            right: -30px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .header h1 i {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            font-size: 1.6em;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+            font-weight: 400;
+        }
+
+        .edit-form {
+            padding: 35px;
+            background: white;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid #667eea;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group label i {
+            color: #2ecc71;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .errorlist {
+            list-style: none;
+            padding: 12px 16px;
+            background: #fee;
+            color: #c33;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            border-left: 4px solid #ff4757;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .errorlist li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .errorlist li::before {
+            content: '⚠️';
+            font-size: 0.9em;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            gap: 12px;
+            color: #764ba2;
+        }
+
+        .form-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 8px;
+            font-style: italic;
+            padding-left: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                margin: 20px;
+            }
+            
+            .edit-form {
+                padding: 25px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 1.7em;
+            }
+            
+            .float-element {
+                display: none; /* Hide floating elements on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="float-element"></div>
+    <div class="float-element"></div>
+    <div class="float-element"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-edit"></i> Edit Task</h1>
+                <p>Update your task details below</p>
+            </div>
+        </div>
+
+        <div class="edit-form">
+            <form method="POST">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {% if field.name == 'title' %}
+                                <i class=></i> Task Title
+                            {% elif field.name == 'description' %}
+                                <i class="fas fa-align-left"></i> Description
+                            {% elif field.name == 'completed' %}
+                                <i class="fas fa-check-circle"></i> Completion Status
+                            {% elif field.name == 'priority' %}
+                                <i class="fas fa-flag"></i> Priority
+                            {% elif field.name == 'due_date' %}
+                                <i class="fas fa-calendar-alt"></i> Due Date
+                            {% else %}
+                                <i class="fas fa-tag"></i> {{ field.label }}
+                            {% endif %}
+                        </label>
+                        
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            <div class="checkbox-group">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">
+                                    <i class="fas fa-check"></i>
+                                    Mark as completed
+                                </label>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <p class="form-description">{{ field.help_text }}</p>
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                            <div class="errorlist">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Task
+                    </button>
+                    <a href="{% url 'index' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+            
+            <a href="{% url 'index' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Task List
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add class to all form inputs for styling
+        document.querySelectorAll('input[type="text"], input[type="date"], textarea, select').forEach(input => {
+            if (!input.classList.contains('form-input')) {
+                input.classList.add('form-input');
+            }
+        });
+
+        // Format date inputs
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            input.min = today;
+            
+            // Add datepicker styling hint
+            if (!input.placeholder) {
+                input.placeholder = 'YYYY-MM-DD';
+            }
+        });
+
+        // Auto-resize textarea
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
